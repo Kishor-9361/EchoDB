@@ -1,0 +1,31 @@
+# Target folders
+target/
+bin/
+
+# Java and Class files
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+wal.log
+
+# IDE specific
+.settings/
+.classpath
+.project
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# EchoDB specific data folders
+data/
+db_logs/

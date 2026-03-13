@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Specification: EchoDB Storage Engine</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            border-bottom: 2px solid #333;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            color: #444;
+            margin-top: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f8f8;
+        }
+
+        .tech-box {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-left: 5px solid #333;
+            margin: 20px 0;
+        }
+
+        code {
+            background: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .syllabus-tag {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #777;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>EchoDB: Technical Specification</h1>
+        <p><strong>Project:</strong> Advanced Data Structures & Algorithms Mini-Project</p>
+        <p><strong>Architecture:</strong> Log-Structured Merge-Tree (LSM) with Adaptive Indexing</p>
+    </header>
+
+    <section>
+        <h2>1. Executive Summary</h2>
+        <p>EchoDB is a high-performance, embedded key-value storage engine designed from first principles. It
+            prioritizes write-throughput and adaptive data retrieval using self-adjusting data structures. Unlike
+            general-purpose engines, EchoDB implements specific algorithms from the ADSA syllabus to optimize for skewed
+            workloads and efficient storage.</p>
+    </section>
+
+    <section>
+        <h2>2. Technical Architecture</h2>
+        <h3>A. Write Path (Durability Level: High)</h3>
+        <ol>
+            <li><strong>Write-Ahead Log (WAL):</strong> Append-only sequential disk write for crash recovery.</li>
+            <li><strong>MemTable (In-Memory):</strong> Data is inserted into a <strong>Splay Tree</strong>. Amortized
+                <code>O(log n)</code>. Frequently accessed keys migrate to the root.</li>
+            <li><strong>Flushing:</strong> Threshold-based transition from RAM to Disk.</li>
+        </ol>
+
+        <h3>B. Read Path (Latency Level: Low)</h3>
+        <ol>
+            <li><strong>Memory Search:</strong> Initial lookup in the Splay Tree.</li>
+            <li><strong>Disk Search (SSTables):</strong> Multi-layered search in sorted files.</li>
+            <li><strong>Internal Indexing:</strong> Each SSTable block is indexed by a <strong>B+Tree</strong> at the
+                footer to minimize disk seek operations.</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>3. Syllabus Alignment & Implementation</h2>
+        <p>The following table maps the project's core components to the Advanced Data Structures and Algorithms
+            syllabus.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Algorithm / Structure</th>
+                    <th>Syllabus Reference</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>In-Memory Caching</td>
+                    <td>Splay Tree</td>
+                    <td>Unit I: Non-Linear DS</td>
+                </tr>
+                <tr>
+                    <td>Disk-Based Indexing</td>
+                    <td>B+Tree</td>
+                    <td>Unit I: Non-Linear DS</td>
+                </tr>
+                <tr>
+                    <td>Compaction Scheduling</td>
+                    <td>Fibonacci Heap</td>
+                    <td>Unit I: Non-Linear DS</td>
+                </tr>
+                <tr>
+                    <td>SSTable Merging</td>
+                    <td>Parallel Merge-Sort</td>
+                    <td>Unit II: Divide & Conquer</td>
+                </tr>
+                <tr>
+                    <td>Storage Compression</td>
+                    <td>Adaptive Huffman Coding</td>
+                    <td>Unit III: Greedy Technique</td>
+                </tr>
+                <tr>
+                    <td>Deduplication Engine</td>
+                    <td>Longest Common Subsequence</td>
+                    <td>Unit III: Dynamic Programming</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>4. Key Differentiators</h2>
+        <div class="tech-box">
+            <span class="syllabus-tag">COMPARATIVE ANALYSIS</span>
+            <p><strong>EchoDB vs. Industry Standards (LevelDB/RocksDB):</strong></p>
+            <ul>
+                <li><strong>Splay Tree vs. SkipList:</strong> Standard engines use randomized SkipLists. EchoDB uses
+                    Splay Trees to physically reorganize bits based on access frequency, providing better locality for
+                    "hot" keys.</li>
+                <li><strong>Fused Compression:</strong> Huffman tables are recalculated during every compaction cycle,
+                    optimizing the dictionary for the specific data currently in the database.</li>
+                <li><strong>Hybrid Priority:</strong> Fibonacci Heaps are used to solve the multi-objective problem of
+                    which files to merge (balancing file age vs. deletion volume).</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p>Technical Documentation | EchoDB Storage Engine Project | 2026</p>
+    </footer>
+
+</body>
+
+</html>
