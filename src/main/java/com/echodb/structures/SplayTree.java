@@ -127,4 +127,26 @@ public class SplayTree<K extends Comparable<K>, V> {
     public boolean isEmpty() {
         return root == null;
     }
+
+    /**
+     * Clears the tree.
+     */
+    public void clear() {
+        root = null;
+        size = 0;
+    }
+
+    /**
+     * Traverses the tree in-order and applies the consumer to each node.
+     */
+    public void forEach(java.util.function.BiConsumer<K, V> action) {
+        forEach(root, action);
+    }
+
+    private void forEach(Node<K, V> h, java.util.function.BiConsumer<K, V> action) {
+        if (h == null) return;
+        forEach(h.left, action);
+        action.accept(h.key, h.value);
+        forEach(h.right, action);
+    }
 }
