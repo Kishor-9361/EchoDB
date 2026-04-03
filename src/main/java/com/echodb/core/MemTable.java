@@ -59,4 +59,31 @@ public class MemTable {
     public int getCount() {
         return tree.getSize();
     }
+
+    /**
+     * Clears the MemTable.
+     */
+    public void clear() {
+        lock.writeLock().lock();
+        try {
+            this.tree.clear();
+            this.currentByteSize = 0;
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Returns a sorted map containing all the data currently in the MemTable.
+     */
+    public java.util.TreeMap<String, byte[]> getSortedData() {
+        lock.readLock().lock();
+        try {
+            java.util.TreeMap<String, byte[]> sorted = new java.util.TreeMap<>();
+            tree.forEach(sorted::put);
+            return sorted;
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
 }
