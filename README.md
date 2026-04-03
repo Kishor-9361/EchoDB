@@ -36,11 +36,14 @@ If Maven is not installed, you can use the provided script in `docs/TESTING.md`.
 
 ---
 
-## 📈 Status: Phase 1 Complete
-- [x] Splay Tree Implementation
-- [x] B+Tree Indexing Logic
-- [x] Fibonacci Heap Priority Queue
-- [x] MemTable Buffer with thread-safety
+## 📈 Status: Phase 2 Complete
+- [x] Splay Tree Implementation (Unit I)
+- [x] B+Tree Indexing Logic (Unit I)
+- [x] Fibonacci Heap Priority Queue (Unit I)
+- [x] MemTable Buffer with thread-safety (Unit I)
+- [x] Write-Ahead Log (WAL) for durability (Phase 2)
+- [x] SSTable Persistence with Indexing (Phase 2)
+- [x] Storage Engine Integration (Phase 2)
 - [x] Maven Integration
 
 ---
